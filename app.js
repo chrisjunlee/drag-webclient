@@ -21,7 +21,7 @@
     document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;SameSite=Lax';
   }
 
-  var HOST = 'http://localhost:3001';
+  var HOST = 'https://rag.chrisjunlee.com';
 
   function getConfig() {
     return {
@@ -628,7 +628,7 @@
         saveConfig(apiKey, slug);
         showChat();
       } else {
-        setupError.textContent = 'Could not connect. Check your API key and that AnythingLLM is running on localhost:3001.';
+        setupError.textContent = 'Could not connect. Check your API key and that AnythingLLM is running.';
         setupError.hidden = false;
       }
 
