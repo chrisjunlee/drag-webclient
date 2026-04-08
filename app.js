@@ -21,16 +21,17 @@
     document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;SameSite=Lax';
   }
 
+  var HOST = 'http://localhost:3001';
+
   function getConfig() {
     return {
-      host: getCookie('drag_host'),
+      host: HOST,
       apiKey: getCookie('drag_api_key'),
       slug: getCookie('drag_slug'),
     };
   }
 
-  function saveConfig(host, apiKey, slug) {
-    setCookie('drag_host', host, 365);
+  function saveConfig(apiKey, slug) {
     setCookie('drag_api_key', apiKey, 365);
     setCookie('drag_slug', slug, 365);
   }
@@ -562,9 +563,9 @@
 
   // ── Setup / Auth ──
 
-  async function validateConnection(host, apiKey) {
+  async function validateConnection(apiKey) {
     try {
-      var resp = await fetch(host + '/api/v1/auth', {
+      var resp = await fetch(HOST + '/api/v1/auth', {
         headers: { 'Authorization': 'Bearer ' + apiKey },
       });
       return resp.ok;
@@ -576,16 +577,13 @@
   function showSetup(prefill) {
     var overlay = document.getElementById('setup-overlay');
     var app = document.getElementById('app');
-    var hostInput = document.getElementById('setup-host');
     var keyInput = document.getElementById('setup-key');
     var slugInput = document.getElementById('setup-slug');
 
     if (prefill) {
-      hostInput.value = prefill.host || '';
       keyInput.value = prefill.apiKey || '';
       slugInput.value = prefill.slug || '';
     } else {
-      hostInput.value = hostInput.value || 'http://192.168.8.242:3001';
       slugInput.value = slugInput.value || 'my-workspace';
     }
 
@@ -616,22 +614,21 @@
 
     setupForm.addEventListener('submit', async function (e) {
       e.preventDefault();
-      var host = document.getElementById('setup-host').value.replace(/\/+$/, '');
       var apiKey = document.getElementById('setup-key').value.trim();
       var slug = document.getElementById('setup-slug').value.trim();
 
-      if (!host || !apiKey || !slug) return;
+      if (!apiKey || !slug) return;
 
       setupBtn.disabled = true;
       setupBtn.textContent = 'Connecting...';
       setupError.hidden = true;
 
-      var ok = await validateConnection(host, apiKey);
+      var ok = await validateConnection(apiKey);
       if (ok) {
-        saveConfig(host, apiKey, slug);
+        saveConfig(apiKey, slug);
         showChat();
       } else {
-        setupError.textContent = 'Could not connect. Check the host URL and API key.';
+        setupError.textContent = 'Could not connect. Check your API key and that AnythingLLM is running on localhost:3001.';
         setupError.hidden = false;
       }
 
@@ -689,7 +686,7 @@
 
     // Check for existing config
     var config = getConfig();
-    if (config.host && config.apiKey && config.slug) {
+    if (config.apiKey && config.slug) {
       showChat();
     } else {
       showSetup();
