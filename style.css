@@ -70,7 +70,16 @@ input, textarea {
   padding: 2.5rem 2rem;
   width: 100%;
   max-width: 400px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 24px rgba(37, 99, 235, 0.15);
+  animation: card-glow 4s ease infinite;
+}
+
+@keyframes card-glow {
+  0%   { box-shadow: 0 -4px 20px rgba(37, 99, 235, 0.2), 0 4px 20px rgba(37, 99, 235, 0.05); }
+  25%  { box-shadow: 4px 0 20px rgba(124, 58, 237, 0.2), -4px 0 20px rgba(124, 58, 237, 0.05); }
+  50%  { box-shadow: 0 4px 20px rgba(236, 72, 153, 0.2), 0 -4px 20px rgba(236, 72, 153, 0.05); }
+  75%  { box-shadow: -4px 0 20px rgba(124, 58, 237, 0.2), 4px 0 20px rgba(124, 58, 237, 0.05); }
+  100% { box-shadow: 0 -4px 20px rgba(37, 99, 235, 0.2), 0 4px 20px rgba(37, 99, 235, 0.05); }
 }
 
 .setup-card h1 {
